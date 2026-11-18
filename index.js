@@ -39,3 +39,15 @@ app.post('/api', async (req, res) => {
                 })
             }
         );
+
+        if (!response.ok) {
+            const errorData = await response.text();
+
+            console.error("OperRuter Error:", errorData);
+
+            return res.status(response.status).json({
+                error: errorData
+            });
+        }
+        
+        
