@@ -13,3 +13,29 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
+app.post('/api', async (req, res) => {
+    try {
+        const massage = req.body.message;
+
+        if (!massage || !Array.isArray(massage)) {
+            return res.status(400).json({
+                eror: "Massages harus berupa array"
+            });
+        }
+
+        const response = await fetch(
+            "https://openrouter.ai/api/v1/chat/completions",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "nvidia/nemotron-3.5-super-v1:free",
+                    messages: messages,
+                    temperature: 0.7,
+                    max_tokens: 1000,
+                })
+            }
+        );
